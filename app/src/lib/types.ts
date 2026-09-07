@@ -127,10 +127,22 @@ export const MonthlyKpiSchema = z.object({
 });
 export type MonthlyKpiRow = z.infer<typeof MonthlyKpiSchema>;
 
+/** monthly_kpi.csv 의 필드 중 목표치가 있는 것만. xlsx 시트 제목에 직접 기재된 값(evidence A). */
+export const KpiTargetSchema = z.object({
+  metric: z.enum(["ga_login_count", "touch_send_total", "send_agent_unique_total", "apply_total"]),
+  label: z.string(),
+  target_value: z.number(),
+  target_period: z.enum(["monthly_avg", "annual_cumulative"]),
+  unit: z.string(),
+  source: z.string(),
+});
+export type KpiTarget = z.infer<typeof KpiTargetSchema>;
+
 export interface Dataset {
   events: EventRow[];
   benefits: BenefitRow[];
   performance: PerformanceRow[];
   insights: InsightRow[];
   monthlyKpi: MonthlyKpiRow[];
+  kpiTargets: KpiTarget[];
 }

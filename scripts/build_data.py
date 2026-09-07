@@ -493,7 +493,10 @@ def main():
         monthly_rows,
     )
 
-    print("[3/3] data_audit.json / data_dictionary.md 생성")
+    print("[3/4] kpi_targets.json 생성 (xlsx에 직접 기재된 목표치)")
+    build_kpi_targets_json()
+
+    print("[4/4] data_audit.json / data_dictionary.md 생성")
     build_audit_json(events_rows, benefits_rows, performance_rows, insights_rows, monthly_rows, xlsx_meta)
     build_data_dictionary()
 
@@ -504,6 +507,49 @@ def main():
     print(f"인사이트 수: {len(insights_rows)}")
     review_needed = sum(1 for e in events_rows if str(e['review_required']).lower() == 'true')
     print(f"검수 필요(review_required=True) 이벤트: {review_needed} / {len(events_rows)}")
+
+
+def build_kpi_targets_json():
+    """[고객터치 시스템] 월별 주요지표 .xlsx 시트에 직접 기재된 목표치(evidence A).
+    원문: '1.월별접속자(목표:월평균9천명)', '2-1.월별_터치거리발송량(목표:월평균1.5만건)',
+    '2-2월별_발송GAAgt.수(unique,목표:월평균5천명이상)', '3.월별고객응모데이터(목표:연간19.5만명)'."""
+    targets = [
+        {
+            "metric": "ga_login_count",
+            "label": "GA(설계사) 월별 접속자 수",
+            "target_value": 9000,
+            "target_period": "monthly_avg",
+            "unit": "명",
+            "source": "[고객터치 시스템] 월별 주요지표 .xlsx, '1.월별접속자' 시트 제목",
+        },
+        {
+            "metric": "touch_send_total",
+            "label": "월별 고객터치 발송량",
+            "target_value": 15000,
+            "target_period": "monthly_avg",
+            "unit": "건",
+            "source": "[고객터치 시스템] 월별 주요지표 .xlsx, '2-1.월별_터치거리발송량' 시트 제목",
+        },
+        {
+            "metric": "send_agent_unique_total",
+            "label": "월별 발송 GA Agt. 수(unique)",
+            "target_value": 5000,
+            "target_period": "monthly_avg",
+            "unit": "명",
+            "source": "[고객터치 시스템] 월별 주요지표 .xlsx, '2-2월별_발송GAAgt.수' 시트 제목",
+        },
+        {
+            "metric": "apply_total",
+            "label": "연간 고객 응모 수",
+            "target_value": 195000,
+            "target_period": "annual_cumulative",
+            "unit": "명",
+            "source": "[고객터치 시스템] 월별 주요지표 .xlsx, '3.월별고객응모데이터' 시트 제목",
+        },
+    ]
+    with open(OUT / "kpi_targets.json", "w", encoding="utf-8") as f:
+        json.dump(targets, f, ensure_ascii=False, indent=2)
+    print(f"  -> {(OUT / 'kpi_targets.json').relative_to(BASE)}")
 
 
 def build_audit_json(events_rows, benefits_rows, performance_rows, insights_rows, monthly_rows, xlsx_meta):

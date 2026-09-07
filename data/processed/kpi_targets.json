@@ -1,0 +1,34 @@
+[
+  {
+    "metric": "ga_login_count",
+    "label": "GA(설계사) 월별 접속자 수",
+    "target_value": 9000,
+    "target_period": "monthly_avg",
+    "unit": "명",
+    "source": "[고객터치 시스템] 월별 주요지표 .xlsx, '1.월별접속자' 시트 제목"
+  },
+  {
+    "metric": "touch_send_total",
+    "label": "월별 고객터치 발송량",
+    "target_value": 15000,
+    "target_period": "monthly_avg",
+    "unit": "건",
+    "source": "[고객터치 시스템] 월별 주요지표 .xlsx, '2-1.월별_터치거리발송량' 시트 제목"
+  },
+  {
+    "metric": "send_agent_unique_total",
+    "label": "월별 발송 GA Agt. 수(unique)",
+    "target_value": 5000,
+    "target_period": "monthly_avg",
+    "unit": "명",
+    "source": "[고객터치 시스템] 월별 주요지표 .xlsx, '2-2월별_발송GAAgt.수' 시트 제목"
+  },
+  {
+    "metric": "apply_total",
+    "label": "연간 고객 응모 수",
+    "target_value": 195000,
+    "target_period": "annual_cumulative",
+    "unit": "명",
+    "source": "[고객터치 시스템] 월별 주요지표 .xlsx, '3.월별고객응모데이터' 시트 제목"
+  }
+]

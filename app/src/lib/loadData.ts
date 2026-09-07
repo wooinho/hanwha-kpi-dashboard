@@ -184,6 +184,7 @@ export function loadDataset(): Dataset {
     performance: readCsv<Record<string, string>>("performance.csv").map(mapPerformance),
     insights: readCsv<Record<string, string>>("insights.csv").map(mapInsight),
     monthlyKpi: readCsv<Record<string, string>>("monthly_kpi.csv").map(mapMonthlyKpi),
+    kpiTargets: JSON.parse(fs.readFileSync(path.join(PROCESSED_DIR, "kpi_targets.json"), "utf-8")),
   };
   return cache;
 }
