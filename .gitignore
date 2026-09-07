@@ -19,3 +19,4 @@ data/processed/media_cross_check.json
 # OS/에디터
 .DS_Store
 Thumbs.db
+.claude/

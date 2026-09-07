@@ -160,6 +160,23 @@ npm test
 - **로컬 우선**: 대시보드는 외부 API를 호출하지 않고, 모든 데이터는 `data/processed/`의 로컬
   파일에서만 옵니다.
 
+## 9-1. 배포 (GitHub Pages)
+
+- **배포 URL**: https://wooinho.github.io/hanwha-kpi-dashboard/
+- **저장소**: https://github.com/wooinho/hanwha-kpi-dashboard (⚠️ Public — 이 대시보드에 표시되는 참여자 수·예산
+  등 한화생명 캠페인 내부 수치가 공개 웹에 노출됩니다. 사용자 확인 후 진행됨)
+- **구조**: Next.js `output: 'export'`로 완전 정적 사이트를 빌드해 `docs/` 폴더에 넣고, GitHub Pages
+  설정을 `main` 브랜치 `/docs` 경로로 지정. 서버가 없으므로 별도 호스팅 비용·유지보수가 없음.
+- **저장소에는 올리지 않은 것**: `data/raw/`(원본 pptx/xlsx), `data/reference/`(178MB 제안서 pptx),
+  `data/processed/_raw_dump/`(원문 텍스트 덤프), `.claude/`(다른 클라이언트 프로젝트 로컬 경로 포함) —
+  `.gitignore` 참고.
+- **갱신 방법**: 데이터나 코드를 바꾼 뒤 `publish_to_github.bat`을 더블클릭하면
+  `build_data.py` 재실행 → `npm run build`(정적 export) → `docs/` 갱신 → git commit/push까지
+  자동으로 처리되어 같은 URL이 몇 분 내 갱신됩니다.
+- **basePath**: `app/next.config.ts`는 환경변수 `GITHUB_PAGES=true`일 때만 `basePath`/`assetPrefix`를
+  `/hanwha-kpi-dashboard`로 적용합니다. `publish_to_github.bat`이 빌드 시 이 변수를 자동으로 설정하므로,
+  평소 `npm run dev`/`npm run build`는 하위 경로 없이 `http://localhost:3100/`에서 그대로 동작합니다.
+
 ## 10. 프로젝트 구조
 
 ```
