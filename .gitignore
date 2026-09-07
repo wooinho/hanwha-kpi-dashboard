@@ -1,0 +1,21 @@
+# 의존성/빌드 산출물
+app/node_modules/
+app/.next/
+app/out/
+app/.next-profiles/
+app/*.tsbuildinfo
+
+# 원본 자료 (용량이 크고, 다듬어지지 않은 원문/이미지가 그대로 담겨 있어 저장소에는 올리지 않음)
+data/raw/
+data/reference/
+data/processed/_raw_dump/
+data/processed/media_cross_check.json
+
+# 환경 변수 (실제 값이 들어가는 로컬 파일만 제외, .env.example은 커밋)
+.env
+.env.local
+.env.*.local
+
+# OS/에디터
+.DS_Store
+Thumbs.db
