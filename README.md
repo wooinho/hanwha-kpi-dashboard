@@ -171,11 +171,28 @@ npm test
   `data/processed/_raw_dump/`(원문 텍스트 덤프), `.claude/`(다른 클라이언트 프로젝트 로컬 경로 포함) —
   `.gitignore` 참고.
 - **갱신 방법**: 데이터나 코드를 바꾼 뒤 `publish_to_github.bat`을 더블클릭하면
-  `build_data.py` 재실행 → `npm run build`(정적 export) → `docs/` 갱신 → git commit/push까지
+  `build_data.py` 재실행 → `npm run build:pages`(정적 export) → `docs/` 갱신 → git commit/push까지
   자동으로 처리되어 같은 URL이 몇 분 내 갱신됩니다.
 - **basePath**: `app/next.config.ts`는 환경변수 `GITHUB_PAGES=true`일 때만 `basePath`/`assetPrefix`를
-  `/hanwha-kpi-dashboard`로 적용합니다. `publish_to_github.bat`이 빌드 시 이 변수를 자동으로 설정하므로,
-  평소 `npm run dev`/`npm run build`는 하위 경로 없이 `http://localhost:3100/`에서 그대로 동작합니다.
+  `/hanwha-kpi-dashboard`로 적용합니다. `app/package.json`의 `build:pages` 스크립트가 이 변수를 설정해
+  실행하므로(일반 `npm run build`는 설정하지 않음), 평소 `npm run dev`/`npm run build`는 하위 경로 없이
+  `http://localhost:3100/`에서 그대로 동작합니다.
+
+### 배포 링크가 절대 바뀌지 않는 이유
+
+매번 재배포해도 `https://wooinho.github.io/hanwha-kpi-dashboard/` 링크가 그대로 유지되도록 설계했습니다.
+
+1. **저장소 이름을 바꾸지 않는 한** URL(`<계정>.github.io/<저장소명>`)이 고정됩니다. 저장소명은
+   `app/next.config.ts`의 `repoName` 상수와도 연결돼 있으니, 정말 이름을 바꿔야 한다면 그 상수도
+   함께 바꿔야 합니다(평소엔 건드릴 필요 없음).
+2. **GitHub Pages 설정(소스=main 브랜치의 /docs 폴더)은 저장소에 저장된 설정**이라 매번 다시 켤
+   필요가 없습니다. `publish_to_github.bat`은 항상 같은 브랜치·같은 폴더에만 커밋합니다.
+3. **`build:pages`를 안 쓰고 실수로 일반 `npm run build`로 만든 결과물을 `docs/`에 올리는 실수**를
+   막기 위해, `publish_to_github.bat`이 `docs/index.html`에 `/hanwha-kpi-dashboard/_next/` 경로가
+   있는지 커밋 직전에 자동 검사합니다. 없으면 즉시 중단하고 오류를 표시합니다(링크는 안 바뀌어도
+   사이트가 깨져 보이는 상황을 방지).
+
+즉 **`publish_to_github.bat`으로만 배포하는 한** 링크 변동을 신경 쓸 필요가 없습니다.
 
 ## 10. 프로젝트 구조
 

@@ -13,9 +13,7 @@ if errorlevel 1 goto :error
 
 echo [2/4] Next.js 정적 빌드 중 (GitHub Pages 하위 경로 적용)...
 cd app
-set GITHUB_PAGES=true
-call npm run build
-set GITHUB_PAGES=
+call npm run build:pages
 if errorlevel 1 goto :error
 cd ..
 
@@ -24,6 +22,15 @@ rmdir /s /q docs 2>nul
 mkdir docs
 xcopy /e /i /y app\out\* docs\ >nul
 type nul > docs\.nojekyll
+
+REM 안전장치: build:pages(=GITHUB_PAGES=true) 대신 실수로 npm run build를 써서
+REM basePath 없는 빌드가 docs/에 들어가면 링크는 같아도 사이트가 깨져 보임 - 미리 검사.
+findstr /c:"/hanwha-kpi-dashboard/_next/" docs\index.html >nul
+if errorlevel 1 (
+  echo [오류] docs\index.html 에 /hanwha-kpi-dashboard 경로가 없습니다.
+  echo        app\package.json 의 build:pages 스크립트가 아닌 일반 build가 실행된 것 같습니다.
+  goto :error
+)
 
 echo [4/4] GitHub에 반영 중...
 git add -A
