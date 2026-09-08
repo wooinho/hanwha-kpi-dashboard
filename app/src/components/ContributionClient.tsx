@@ -16,9 +16,12 @@ import { Card, CardTitle } from "@/components/ui/Card";
 import { DataStatusBadge, Badge, EvidenceBadge } from "@/components/ui/Badge";
 import { KpiCard } from "@/components/KpiCard";
 import { KpiAchievementCard } from "@/components/KpiAchievementCard";
+import { MonthlyKpiUploader } from "@/components/MonthlyKpiUploader";
+import { useDataOverride } from "@/components/DataOverrideProvider";
 import { buildMatrixRows, type MatrixRow } from "@/lib/matrix";
 import { computeOverviewMetrics } from "@/lib/aggregate";
 import { computeKpiAchievements } from "@/lib/kpiAchievement";
+import { mergeMonthlyKpi } from "@/lib/monthlyKpiOverride";
 import { fmtKrw, fmtNumber, fmtPercent, isNum } from "@/lib/calc";
 import { NA } from "@/lib/types";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -48,7 +51,12 @@ export function ContributionClient({ data }: { data: Dataset }) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [onlyEvidenced, setOnlyEvidenced] = useState(true);
 
-  const achievements = useMemo(() => computeKpiAchievements(data), [data]);
+  const { rows: monthlyKpiOverrideRows } = useDataOverride();
+  const effectiveData = useMemo(
+    () => ({ ...data, monthlyKpi: mergeMonthlyKpi(data.monthlyKpi, monthlyKpiOverrideRows) }),
+    [data, monthlyKpiOverrideRows]
+  );
+  const achievements = useMemo(() => computeKpiAchievements(effectiveData), [effectiveData]);
 
   const options = useMemo(
     () => ({
@@ -183,7 +191,13 @@ export function ContributionClient({ data }: { data: Dataset }) {
           목표치는 [고객터치 시스템] 월별 주요지표 .xlsx 시트 제목에 직접 기재된 값입니다(evidence A). 이
           집계는 이벤트·뉴스레터·터치콘텐츠 등 전체 채널을 합산한 전사 수치라, 아래 이벤트 내역과 1:1로
           대응하지 않을 수 있습니다.
+          {monthlyKpiOverrideRows && (
+            <span className="ml-1 font-medium text-amber-600">
+              (지금 표시된 값은 업로드한 엑셀 기준 미리보기입니다 - 이 브라우저에만 적용됨)
+            </span>
+          )}
         </p>
+        <MonthlyKpiUploader baseMonthlyKpi={data.monthlyKpi} />
       </section>
 
       <section className="flex flex-col gap-3">
