@@ -194,6 +194,35 @@ npm test
 
 즉 **`publish_to_github.bat`으로만 배포하는 한** 링크 변동을 신경 쓸 필요가 없습니다.
 
+### 대시보드에서 엑셀 업로드로 "모든 방문자"에게 반영하기
+
+화면 ① 목표 KPI 섹션의 "엑셀로 업데이트" 카드는 두 단계로 동작합니다.
+
+1. **미리보기(누구나, 로그인 불필요)**: `.xlsx` 파일을 올리면 이 브라우저(로컬 `localStorage`)에만
+   반영되어 바로 확인할 수 있습니다. 새로고침해도 유지되지만, 다른 사람에게는 보이지 않습니다.
+2. **실제 반영(관리자 전용, GitHub 토큰 필요)**: 미리보기 카드를 펼치면 나오는 노란색
+   "관리자: 이 링크를 가진 모든 사람에게 실제로 반영하기" 영역에 **GitHub 개인용 액세스
+   토큰(Fine-grained)**을 입력하고 "모두에게 반영하기"를 누르면:
+   - 브라우저가 GitHub Contents API로 `data/processed/monthly_kpi.csv`를 저장소에 직접 커밋합니다
+     (토큰은 그 요청에만 쓰이고 어디에도 저장되지 않습니다 - 새로고침하면 다시 입력해야 함).
+   - 이 커밋을 `.github/workflows/rebuild-pages.yml`이 감지해 자동으로 Next.js 정적 빌드를 다시 만들고
+     `docs/`를 갱신·커밋합니다(Python/원본 xlsx 불필요 - 이미 커밋된 정제 CSV만 사용).
+   - GitHub Pages가 그 커밋을 서빙해 약 1~2분 뒤 `https://wooinho.github.io/hanwha-kpi-dashboard/`
+     링크를 가진 **모든 사람**에게 반영됩니다.
+
+**토큰 만드는 법**(관리자만): GitHub → Settings → Developer settings → Personal access tokens →
+Fine-grained tokens → New token. Repository access를 `wooinho/hanwha-kpi-dashboard` 저장소 **하나로만**
+제한하고, Permissions에서 `Contents: Read and write`만 부여합니다. 이 토큰은 저장소에 쓸 수 있는
+비밀번호와 같으므로 신뢰하는 사람에게만 공유하고, 다 쓴 뒤에는 GitHub에서 만료시키거나 삭제하는 것을
+권장합니다.
+
+**왜 이런 구조인가**: 정적 사이트(서버 없음)에서 "웹페이지 업로드 → 모두에게 즉시 반영"을 하려면
+어딘가에 쓰기 권한이 있는 자격 증명이 필요합니다. 이 토큰을 사이트 코드에 심어두면(그래서 아무나 그냥
+누르기만 하면 되게 만들면) 공개 저장소에 누구나 쓸 수 있는 구멍이 생기므로, 대신 **실제 반영 권한이
+있는 사람만 자신의 토큰을 그때그때 직접 입력**하는 방식을 택했습니다. GitHub Actions의 빌드·배포
+자체는 GitHub가 그 작업에만 발급하는 임시 토큰(`GITHUB_TOKEN`)을 쓰므로 별도 비밀키 등록이
+필요 없습니다.
+
 ## 10. 프로젝트 구조
 
 ```

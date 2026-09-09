@@ -1,0 +1,68 @@
+name: 데이터 변경 시 대시보드 자동 재배포
+
+# data/processed/*.csv(정제 데이터)가 main에 반영되면(대시보드의 "관리자: 실제 배포" 기능이
+# GitHub API로 직접 커밋하는 경우 포함) 자동으로 Next.js 정적 빌드를 다시 만들어 docs/ 에 넣고
+# 커밋합니다. GitHub Pages는 main의 /docs 폴더를 서빙하도록 이미 설정되어 있어(레포 설정,
+# publish_to_github.bat 최초 설정 시 등록됨) 이 커밋만으로 자동 재배포되어 링크를 가진 모든
+# 사람에게 반영됩니다. 원본 pptx/xlsx(data/raw/)는 저장소에 없으므로 이 워크플로는 Python 없이
+# 이미 커밋된 정제 CSV/JSON만 가지고 Node 빌드만 다시 돌립니다.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "data/processed/**.csv"
+      - "data/processed/**.json"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rebuild-pages
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: app/package-lock.json
+
+      - name: 의존성 설치
+        working-directory: app
+        run: npm ci
+
+      - name: 정적 빌드 (GitHub Pages 하위 경로 적용)
+        working-directory: app
+        run: npm run build:pages
+
+      - name: 안전장치 - basePath 포함 여부 확인
+        run: |
+          if ! grep -q "/hanwha-kpi-dashboard/_next/" app/out/index.html; then
+            echo "::error::app/out/index.html 에 basePath 경로가 없습니다. build:pages 스크립트를 확인하세요."
+            exit 1
+          fi
+
+      - name: docs/ 갱신
+        run: |
+          rm -rf docs
+          mkdir docs
+          cp -r app/out/. docs/
+          touch docs/.nojekyll
+
+      - name: 변경 사항 커밋 및 푸시
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs
+          if git diff --cached --quiet; then
+            echo "docs/ 변경 없음 - 커밋 생략"
+          else
+            git commit -m "자동 재배포: data/processed 변경 감지"
+            git push
+          fi
