@@ -16,6 +16,7 @@ import { Card, CardTitle } from "@/components/ui/Card";
 import { DataStatusBadge, Badge, EvidenceBadge } from "@/components/ui/Badge";
 import { KpiCard } from "@/components/KpiCard";
 import { KpiAchievementCard } from "@/components/KpiAchievementCard";
+import { MonthlyDiagnosisSection } from "@/components/MonthlyDiagnosisSection";
 import { MonthlyKpiUploader } from "@/components/MonthlyKpiUploader";
 import { useDataOverride } from "@/components/DataOverrideProvider";
 import { buildMatrixRows, type MatrixRow } from "@/lib/matrix";
@@ -175,8 +176,8 @@ export function ContributionClient({ data }: { data: Dataset }) {
       <div>
         <h1 className="text-xl font-bold text-gray-900">이벤트별 KPI 기여 분석</h1>
         <p className="text-sm text-gray-500">
-          목표 KPI 대비 달성 현황과, 그 수치에 영향을 미친 이벤트 내역을 한 화면에서 봅니다. 값이 없는
-          항목은 0이 아니라 <Badge tone="neutral">N/A</Badge>로 표시됩니다.
+          목표 KPI 대비 달성 현황, 월별 진단·처방, 그 수치에 영향을 미친 이벤트 내역을 한 화면에서
+          봅니다. 값이 없는 항목은 0이 아니라 <Badge tone="neutral">N/A</Badge>로 표시됩니다.
         </p>
       </div>
 
@@ -200,8 +201,10 @@ export function ContributionClient({ data }: { data: Dataset }) {
         <MonthlyKpiUploader baseMonthlyKpi={data.monthlyKpi} />
       </section>
 
+      <MonthlyDiagnosisSection data={effectiveData} />
+
       <section className="flex flex-col gap-3">
-        <h2 className="text-sm font-bold text-gray-700">② 이벤트 운영 요약 (아래 필터 적용됨)</h2>
+        <h2 className="text-sm font-bold text-gray-700">③ 이벤트 운영 요약 (아래 필터 적용됨)</h2>
         <FilterBar filters={filters} onChange={setFilters} options={options} showBenefitType />
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <KpiCard label="운영 프로모션 수" value={`${filteredEvents.length}건`} />
@@ -221,7 +224,7 @@ export function ContributionClient({ data }: { data: Dataset }) {
 
       <section className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-bold text-gray-700">③ 달성 수치에 영향을 미친 이벤트 내역</h2>
+          <h2 className="text-sm font-bold text-gray-700">④ 달성 수치에 영향을 미친 이벤트 내역</h2>
           <label className="flex items-center gap-1.5 text-xs text-gray-500">
             <input
               type="checkbox"

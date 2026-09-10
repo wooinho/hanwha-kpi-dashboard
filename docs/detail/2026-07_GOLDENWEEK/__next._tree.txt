@@ -1,2 +1,2 @@
-:HL["/hanwha-kpi-dashboard/_next/static/chunks/1m8g94xdvc_wz.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"detail","param":null,"prefetchHints":4192,"slots":{"children":{"name":"eventId","param":{"type":"d","key":"2026-07_GOLDENWEEK","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"l4s46rC6E3T85zMVIVzay"}
+:HL["/hanwha-kpi-dashboard/_next/static/chunks/2hme93_j7i1od.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"detail","param":null,"prefetchHints":4192,"slots":{"children":{"name":"eventId","param":{"type":"d","key":"2026-07_GOLDENWEEK","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"B9t7taqQgTIjjmaOq_nLc"}
