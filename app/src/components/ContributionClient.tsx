@@ -18,6 +18,7 @@ import { KpiCard } from "@/components/KpiCard";
 import { KpiAchievementCard } from "@/components/KpiAchievementCard";
 import { MonthlyDiagnosisSection } from "@/components/MonthlyDiagnosisSection";
 import { CampaignInsightSection } from "@/components/CampaignInsightSection";
+import { MonthlyInsightBanner } from "@/components/MonthlyInsightBanner";
 import { MonthlyKpiUploader } from "@/components/MonthlyKpiUploader";
 import { useDataOverride } from "@/components/DataOverrideProvider";
 import { buildMatrixRows, type MatrixRow } from "@/lib/matrix";
@@ -181,6 +182,8 @@ export function ContributionClient({ data }: { data: Dataset }) {
           봅니다. 값이 없는 항목은 0이 아니라 <Badge tone="neutral">N/A</Badge>로 표시됩니다.
         </p>
       </div>
+
+      <MonthlyInsightBanner data={effectiveData} />
 
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-bold text-gray-700">① 목표 KPI 대비 달성 현황 (전사 집계, 2026년)</h2>
