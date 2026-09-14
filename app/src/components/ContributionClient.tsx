@@ -17,6 +17,7 @@ import { DataStatusBadge, Badge, EvidenceBadge } from "@/components/ui/Badge";
 import { KpiCard } from "@/components/KpiCard";
 import { KpiAchievementCard } from "@/components/KpiAchievementCard";
 import { MonthlyDiagnosisSection } from "@/components/MonthlyDiagnosisSection";
+import { CampaignInsightSection } from "@/components/CampaignInsightSection";
 import { MonthlyKpiUploader } from "@/components/MonthlyKpiUploader";
 import { useDataOverride } from "@/components/DataOverrideProvider";
 import { buildMatrixRows, type MatrixRow } from "@/lib/matrix";
@@ -176,7 +177,7 @@ export function ContributionClient({ data }: { data: Dataset }) {
       <div>
         <h1 className="text-xl font-bold text-gray-900">이벤트별 KPI 기여 분석</h1>
         <p className="text-sm text-gray-500">
-          목표 KPI 대비 달성 현황, 월별 진단·처방, 그 수치에 영향을 미친 이벤트 내역을 한 화면에서
+          목표 KPI 대비 달성 현황, 월별 진단·처방, 이벤트 내역, 캠페인별 기여 인사이트를 한 화면에서
           봅니다. 값이 없는 항목은 0이 아니라 <Badge tone="neutral">N/A</Badge>로 표시됩니다.
         </p>
       </div>
@@ -307,6 +308,8 @@ export function ContributionClient({ data }: { data: Dataset }) {
         </div>
       </Card>
       </section>
+
+      <CampaignInsightSection data={effectiveData} />
     </div>
   );
 }
