@@ -100,4 +100,38 @@ describe("buildCampaignInsights", () => {
     const [x] = buildCampaignInsights(makeDataset(events, performance));
     expect(x.totalParticipants).toBe("N/A");
   });
+
+  it("해석 문장에 이벤트명을 직접 언급해, 어떤 회차가 KPI에 기여했고 어떤 회차는 근거가 부족한지 알 수 있다", () => {
+    const events = [
+      makeEvent({ event_id: "GW-1", event_month: "2026-03", event_name: "골든위크" }),
+      makeEvent({ event_id: "GW-2", event_month: "2026-07", event_name: "골든위크" }),
+      makeEvent({ event_id: "GW-3", event_month: "2026-08", event_name: "골든위크(계획)" }),
+    ];
+    const performance = [
+      makePerf({ event_id: "GW-1", evidence_type: "A", participant_count: 8000 }),
+      makePerf({ event_id: "GW-2", evidence_type: "A", participant_count: 43000 }),
+      makePerf({ event_id: "GW-3", evidence_type: "D" }), // 근거 부족 회차
+    ];
+    const [gw] = buildCampaignInsights(makeDataset(events, performance));
+    // 가장 많이 참여한 회차(2026-07)와 가장 적었던 회차(2026-03)를 이름으로 지목한다
+    expect(gw.interpretation).toContain("골든위크(2026-07");
+    expect(gw.interpretation).toContain("43,000명");
+    expect(gw.interpretation).toContain("골든위크(2026-03");
+    // 근거가 부족한 회차(2026-08)도 이름으로 지목해 기여 여부를 판단할 수 없다고 밝힌다
+    expect(gw.interpretation).toContain("골든위크(계획)(2026-08)");
+  });
+
+  it("정성 리뷰만 있는 회차는 해석 문장에 이벤트명을 언급하며 수치화하지 않았음을 밝힌다", () => {
+    const events = [makeEvent({ event_id: "SD-1", event_category: "설계지원팀장", event_month: "2026-02", event_name: "설계지원팀장" })];
+    const performance = [makePerf({ event_id: "SD-1", evidence_type: "C" })];
+    const [observed] = buildCampaignInsights(makeDataset(events, performance));
+    expect(observed.interpretation).toContain("설계지원팀장(2026-02)");
+  });
+
+  it("근거가 전혀 없는 회차도 해석 문장에 이벤트명을 언급한다", () => {
+    const events = [makeEvent({ event_id: "X-1", event_category: "지방문화혜택", event_month: "2026-04", event_name: "지방문화혜택_광주공연" })];
+    const performance = [makePerf({ event_id: "X-1", evidence_type: "D" })];
+    const [x] = buildCampaignInsights(makeDataset(events, performance));
+    expect(x.interpretation).toContain("지방문화혜택_광주공연(2026-04)");
+  });
 });

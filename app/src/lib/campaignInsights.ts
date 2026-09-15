@@ -106,26 +106,51 @@ export function buildCampaignInsights(data: Dataset): CampaignInsight[] {
       fact += ` (정량 근거 회차 기준) ${parts.join(", ")}.`;
     }
 
+    // 회차 이름표기 - "이벤트명(월, 참여자수)" 형태로, 기존 테이블(③④)의 "이벤트명(월)" 표기 관례를 그대로 씀
+    const nameWithCount = (r: MatrixRow) =>
+      `${r.event.event_name}(${r.event.event_month}${isNum(r.participantCount) ? `, ${(r.participantCount as number).toLocaleString("ko-KR")}명` : ""})`;
+    const nameOnly = (r: MatrixRow) => `${r.event.event_name}(${r.event.event_month})`;
+
+    const kpiPhrase = relatedKpiLabels.length > 0 ? `'${relatedKpiLabels.join("', '")}'` : "관련 KPI";
+    const evidencedWithCount = [...evidenced]
+      .filter((r) => isNum(r.participantCount))
+      .sort((a, b) => (b.participantCount as number) - (a.participantCount as number));
+    const noEvidenceNames = noEvidence.map(nameOnly);
+
     let interpretation: string;
     let hypothesis: string;
     let verificationKpi: string;
 
     if (contributionLevel === "confirmed") {
-      interpretation =
-        relatedKpiLabels.length > 0
-          ? `유도 행동(${targetBehaviors.join(", ")})으로 볼 때, 이 캠페인은 '${relatedKpiLabels.join("', '")}' 목표와 함께 관찰되는 참여 실적을 보유하고 있습니다.`
-          : `정량 근거는 있으나 유도 행동 정보가 부족해 어떤 목표 KPI와 연결되는지 원문에서 명확히 확인되지 않습니다.`;
+      if (evidencedWithCount.length >= 2) {
+        const top = evidencedWithCount[0];
+        const bottom = evidencedWithCount[evidencedWithCount.length - 1];
+        interpretation = `${category} 중에서는 ${nameWithCount(top)}가 가장 많은 참여를 이끌어 ${kpiPhrase} 목표에 가장 크게 기여한 것으로 관찰되고, ${nameWithCount(bottom)}은(는) 상대적으로 참여가 적어 기여가 제한적이었던 것으로 보입니다.`;
+      } else if (evidencedWithCount.length === 1) {
+        interpretation = `${nameWithCount(evidencedWithCount[0])}가 ${kpiPhrase} 목표에 기여한 것으로 관찰되는, 이 캠페인의 유일한 정량 근거 회차입니다.`;
+      } else {
+        // 근거 A/B는 있으나(예: 예산 등 파생 지표) 참여자 수 자체는 없는 경우 - 기존 일반 서술 유지
+        interpretation =
+          relatedKpiLabels.length > 0
+            ? `유도 행동(${targetBehaviors.join(", ")})으로 볼 때, 이 캠페인은 ${kpiPhrase} 목표와 함께 관찰되는 참여 실적을 보유하고 있습니다.`
+            : `정량 근거는 있으나 유도 행동 정보가 부족해 어떤 목표 KPI와 연결되는지 원문에서 명확히 확인되지 않습니다.`;
+      }
+      if (noEvidenceNames.length > 0) {
+        interpretation += ` 반면 ${noEvidenceNames.slice(0, 3).join(", ")}${noEvidenceNames.length > 3 ? ` 외 ${noEvidenceNames.length - 3}건` : ""}은(는) 근거가 부족해 KPI 기여 여부를 판단할 수 없습니다.`;
+      }
       hypothesis =
         relatedInsightIds.length > 0
           ? "이 캠페인에 대한 개별 관찰(아래 인사이트)을 참고하세요."
           : "이 캠페인의 정량 실적이 다른 회차에서도 재현되는지 다음 달에 동일 조건으로 비교해볼 필요가 있습니다.";
       verificationKpi = relatedKpiLabels.length > 0 ? relatedKpiLabels.join(", ") : "참여자 수, 참여율";
     } else if (contributionLevel === "observed") {
-      interpretation = "정량 수치는 없지만, 보고서의 정성 리뷰에서 성과가 있었다는 서술이 확인됩니다(수치화하지 않음).";
+      const qualNames = qualitativeOnly.map(nameOnly);
+      interpretation = `${qualNames.join(", ")}${qualNames.length > 1 ? " 모두" : ""} 정량 수치는 없지만, 보고서의 정성 리뷰에서 성과가 있었다는 서술이 확인됩니다(수치화하지 않음).`;
       hypothesis = "다음 보고서부터 참여자 수·미션 달성자 수 등 정량 지표를 함께 기록하면 이 캠페인의 실제 기여도를 확인할 수 있습니다.";
       verificationKpi = relatedKpiLabels.length > 0 ? relatedKpiLabels.join(", ") : "참여자 수, 참여율, 미션 달성률";
     } else {
-      interpretation = "현재 확보된 원본에는 이 캠페인의 정량·정성 근거가 모두 부족해 목표 KPI 기여 여부를 판단할 수 없습니다.";
+      const noneNames = catRows.map(nameOnly);
+      interpretation = `${noneNames.join(", ")}${noneNames.length > 1 ? " 모두" : ""} 정량·정성 근거가 부족해 목표 KPI 기여 여부를 판단할 수 없습니다.`;
       hypothesis = "근거 부족 - 추천 대신 데이터 확보가 우선입니다.";
       verificationKpi = "이벤트 방문자 수, 참여자 수, 미션 달성자 수 (전 항목 미기재)";
     }
