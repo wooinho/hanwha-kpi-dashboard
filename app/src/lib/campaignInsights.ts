@@ -6,7 +6,7 @@ import { buildMatrixRows, type MatrixRow } from "./matrix";
 export type ContributionLevel = "confirmed" | "observed" | "insufficient";
 
 /** 한국어 주격 조사 은/는 선택 (받침 유무 기준). */
-function eunNeun(word: string): "은" | "는" {
+export function eunNeun(word: string): "은" | "는" {
   const last = word.trim().slice(-1);
   const code = last.charCodeAt(0);
   if (code < 0xac00 || code > 0xd7a3) return "는"; // 한글 완성형 범위 밖이면 기본값
@@ -47,7 +47,7 @@ const EVIDENCE_RANK = { A: 0, B: 1, C: 2, D: 3, 없음: 4 } as const;
 /** 이벤트의 유도 행동(target_behavior) 텍스트를 목표 KPI 라벨과 느슨하게 연결한다.
  *  이벤트 스키마에 KPI를 직접 지정하는 필드가 없어, 실제 관찰된 target_behavior 문구를
  *  키워드로 매칭한다 - 새로운 가정을 만들지 않고 원본에 이미 적힌 문구만 사용. */
-function mapBehaviorsToKpiLabels(behaviors: string[]): string[] {
+export function mapBehaviorsToKpiLabels(behaviors: string[]): string[] {
   const labels = new Set<string>();
   for (const b of behaviors) {
     if (b.includes("응모")) labels.add("연간 고객 응모 수");

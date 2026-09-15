@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Card, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import type { Dataset } from "@/lib/types";
-import { listAvailableMonths, buildMonthlyCampaignInsight } from "@/lib/monthlyCampaignInsight";
+import { listAvailableMonths, buildMonthlyCampaignInsight, type CampaignVerdict } from "@/lib/monthlyCampaignInsight";
 import { isNum } from "@/lib/calc";
 import Link from "next/link";
 import { CalendarSearch } from "lucide-react";
@@ -20,6 +20,14 @@ function pctBadgeTone(pct: number | null): "success" | "warning" | "danger" | "n
   return "danger";
 }
 
+const VERDICT_META: Record<CampaignVerdict, { label: string; tone: "success" | "warning" | "danger" | "neutral" | "info" }> = {
+  worked: { label: "기여 관찰됨", tone: "success" },
+  steady: { label: "유지", tone: "info" },
+  baseline: { label: "첫 관찰(추세 보류)", tone: "neutral" },
+  underperformed: { label: "기여 저조", tone: "danger" },
+  insufficient_evidence: { label: "근거 부족", tone: "neutral" },
+};
+
 /**
  * 대시보드 상단 - "이 달 운영한 캠페인이 목표 KPI에 어떤 기여를 했는가 + 다음 캠페인 기획 인사이트"를
  * 월별 드롭다운으로 바로 확인하는 배너. 대시보드의 핵심 목적(월별 캠페인 KPI 기여 파악 + 다음 캠페인
@@ -31,6 +39,13 @@ export function MonthlyInsightBanner({ data }: { data: Dataset }) {
   const insight = useMemo(() => (month ? buildMonthlyCampaignInsight(data, month) : null), [data, month]);
 
   if (!insight) return null;
+
+  const workedOrSteady = insight.workingAnalyses.filter(
+    (a) => a.verdict === "worked" || a.verdict === "steady" || a.verdict === "baseline"
+  );
+  const underperformedOrUnclear = insight.workingAnalyses.filter(
+    (a) => a.verdict === "underperformed" || a.verdict === "insufficient_evidence"
+  );
 
   return (
     <Card className="border-2 border-[var(--accent)]/20 bg-gradient-to-br from-[var(--accent-weak)] to-white">
@@ -105,28 +120,32 @@ export function MonthlyInsightBanner({ data }: { data: Dataset }) {
 
       <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
         <div className="rounded-md border-l-2 border-emerald-400 bg-emerald-50/50 px-2 py-1.5">
-          <p className="mb-1 text-xs font-semibold text-emerald-700">기여했을 가능성이 있는 요인</p>
-          {insight.contributingHighlights.length === 0 ? (
-            <p className="text-xs text-gray-400">관련 관찰 내용이 없습니다.</p>
+          <p className="mb-1 text-xs font-semibold text-emerald-700">KPI에 기여한 것으로 관찰되는 캠페인</p>
+          {workedOrSteady.length === 0 ? (
+            <p className="text-xs text-gray-400">해당하는 캠페인이 없습니다.</p>
           ) : (
-            <ul className="list-disc pl-4 text-xs text-gray-700">
-              {insight.contributingHighlights.slice(0, 3).map((h, i) => (
-                <li key={i}>
-                  <span className="font-medium">{h.eventName}</span>: {h.text}
+            <ul className="space-y-1.5 text-xs text-gray-700">
+              {workedOrSteady.slice(0, 3).map((a) => (
+                <li key={a.eventId}>
+                  <span className="mr-1 font-medium">{a.eventName}</span>
+                  <Badge tone={VERDICT_META[a.verdict].tone}>{VERDICT_META[a.verdict].label}</Badge>
+                  <p className="mt-0.5 text-gray-600">{a.comment}</p>
                 </li>
               ))}
             </ul>
           )}
         </div>
         <div className="rounded-md border-l-2 border-red-300 bg-red-50/40 px-2 py-1.5">
-          <p className="mb-1 text-xs font-semibold text-red-600">개선이 필요한 요인</p>
-          {insight.concerns.length === 0 ? (
-            <p className="text-xs text-gray-400">관련 개선 제안이 없습니다.</p>
+          <p className="mb-1 text-xs font-semibold text-red-600">기여가 저조했거나 판단이 보류된 캠페인</p>
+          {underperformedOrUnclear.length === 0 ? (
+            <p className="text-xs text-gray-400">해당하는 캠페인이 없습니다.</p>
           ) : (
-            <ul className="list-disc pl-4 text-xs text-gray-700">
-              {insight.concerns.slice(0, 3).map((h, i) => (
-                <li key={i}>
-                  <span className="font-medium">{h.eventName}</span>: {h.text}
+            <ul className="space-y-1.5 text-xs text-gray-700">
+              {underperformedOrUnclear.slice(0, 3).map((a) => (
+                <li key={a.eventId}>
+                  <span className="mr-1 font-medium">{a.eventName}</span>
+                  <Badge tone={VERDICT_META[a.verdict].tone}>{VERDICT_META[a.verdict].label}</Badge>
+                  <p className="mt-0.5 text-gray-600">{a.comment}</p>
                 </li>
               ))}
             </ul>
