@@ -25,7 +25,7 @@ import { buildMatrixRows, type MatrixRow } from "@/lib/matrix";
 import { computeOverviewMetrics } from "@/lib/aggregate";
 import { computeKpiAchievements } from "@/lib/kpiAchievement";
 import { mergeMonthlyKpi } from "@/lib/monthlyKpiOverride";
-import { fmtKrw, fmtNumber, fmtPercent, isNum } from "@/lib/calc";
+import { fmtKrw, fmtNumber, fmtPercent, isNum, type Num } from "@/lib/calc";
 import { NA } from "@/lib/types";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import {
@@ -38,6 +38,24 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+
+type ScatterPoint = { x: number; y: number; z: number; hasBudget: boolean; budgetDisplay: Num; name: string; month: string };
+
+function ScatterTooltipContent({ active, payload }: { active?: boolean; payload?: { payload: ScatterPoint }[] }) {
+  if (!active || !payload || payload.length === 0) return null;
+  const p = payload[0].payload;
+  return (
+    <div className="rounded-md border border-[var(--border)] bg-white px-2.5 py-1.5 text-xs shadow-md">
+      <p className="font-semibold text-gray-900">
+        {p.name} <span className="font-normal text-gray-400">({p.month})</span>
+      </p>
+      <p className="mt-0.5 text-gray-600">
+        참여율 {p.x}% · 참여자 수 {p.y.toLocaleString("ko-KR")}명
+      </p>
+      <p className="text-gray-600">경품 예산 {p.hasBudget ? fmtKrw(p.budgetDisplay) : "미기재(기본 크기로 표시)"}</p>
+    </div>
+  );
+}
 
 const columnHelper = createColumnHelper<MatrixRow>();
 
@@ -93,18 +111,26 @@ export function ContributionClient({ data }: { data: Dataset }) {
     [filteredEvents, data]
   );
 
-  const chartData = useMemo(
-    () =>
-      rows
-        .filter((r) => isNum(r.participantCount) && isNum(r.totalBudget))
-        .map((r) => ({
-          x: isNum(r.participationRate) ? r.participationRate : 0,
-          y: r.participantCount as number,
-          z: r.totalBudget as number,
-          name: r.event.event_name,
-        })),
-    [rows]
-  );
+  // 참여율·참여자 수만 있으면 그린다 - 예산은 버블 크기를 위한 부가 정보일 뿐, 없다고 점 자체를 숨기지 않는다
+  // (예산은 원본 보고서에 애초에 기재되지 않은 사례가 많아, 예산을 필수 조건으로 두면 실측된 참여 데이터까지
+  // 함께 버려짐). 예산이 없는 점은 최소 크기로, 색을 옅게 구분해 그린다.
+  const chartData = useMemo(() => {
+    const withRate = rows.filter((r) => isNum(r.participantCount) && isNum(r.participationRate));
+    const budgets = withRate.map((r) => r.totalBudget).filter(isNum);
+    const minBudget = budgets.length > 0 ? Math.min(...budgets) : 1;
+    const fallbackZ = minBudget * 0.5;
+    return withRate.map((r) => ({
+      x: r.participationRate as number,
+      y: r.participantCount as number,
+      z: isNum(r.totalBudget) ? r.totalBudget : fallbackZ,
+      hasBudget: isNum(r.totalBudget),
+      budgetDisplay: r.totalBudget,
+      name: r.event.event_name,
+      month: r.event.event_month,
+    }));
+  }, [rows]);
+  const chartWithBudget = useMemo(() => chartData.filter((d) => d.hasBudget), [chartData]);
+  const chartWithoutBudget = useMemo(() => chartData.filter((d) => !d.hasBudget), [chartData]);
 
   const toggle = (id: string) =>
     setExpanded((prev) => {
@@ -244,23 +270,38 @@ export function ContributionClient({ data }: { data: Dataset }) {
         </div>
 
         <Card>
-          <CardTitle>참여 조건 대비 참여 성과 (버블 크기 = 경품 예산)</CardTitle>
+          <CardTitle>참여 조건 대비 참여 성과 (버블 크기 = 경품 예산, 미기재 시 최소 크기)</CardTitle>
           {chartData.length === 0 ? (
             <div className="flex h-48 flex-col items-center justify-center gap-2 rounded-md border border-dashed border-gray-300 text-sm text-gray-400">
               <span>비교에 필요한 데이터가 부족합니다.</span>
               <span className="text-xs">원본 보고서에 이벤트별 참여율·참여자 수가 함께 기재된 사례가 없어 산점도를 생성할 수 없습니다.</span>
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height={240}>
-              <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
-                <CartesianGrid stroke="#eee" />
-                <XAxis dataKey="x" name="참여율" unit="%" tick={{ fontSize: 12 }} />
-                <YAxis dataKey="y" name="참여자 수" tick={{ fontSize: 12 }} />
-                <ZAxis dataKey="z" range={[60, 400]} name="경품 예산" />
-                <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-                <Scatter data={chartData} fill="var(--accent)" />
-              </ScatterChart>
-            </ResponsiveContainer>
+            <>
+              <ResponsiveContainer width="100%" height={240}>
+                <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: 0 }}>
+                  <CartesianGrid stroke="#eee" />
+                  <XAxis dataKey="x" name="참여율" unit="%" tick={{ fontSize: 12 }} />
+                  <YAxis dataKey="y" name="참여자 수" tick={{ fontSize: 12 }} />
+                  <ZAxis dataKey="z" range={[60, 400]} name="경품 예산" />
+                  <Tooltip cursor={{ strokeDasharray: "3 3" }} content={<ScatterTooltipContent />} />
+                  {chartWithBudget.length > 0 && <Scatter data={chartWithBudget} fill="var(--accent)" />}
+                  {chartWithoutBudget.length > 0 && (
+                    <Scatter data={chartWithoutBudget} fill="#9CA3AF" fillOpacity={0.55} />
+                  )}
+                </ScatterChart>
+              </ResponsiveContainer>
+              {chartWithoutBudget.length > 0 && chartWithBudget.length > 0 && (
+                <p className="flex items-center gap-3 text-xs text-gray-400">
+                  <span className="flex items-center gap-1">
+                    <span className="inline-block h-2 w-2 rounded-full bg-[var(--accent)]" /> 경품 예산 확인됨
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="inline-block h-2 w-2 rounded-full bg-gray-400" /> 경품 예산 미기재(최소 크기로 표시, 참여 실적만 비교)
+                  </span>
+                </p>
+              )}
+            </>
           )}
         </Card>
 
