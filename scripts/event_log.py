@@ -20,6 +20,44 @@
 # evidence_type: A=원본 직접 기재 수치 / B=원본 수치로 계산한 파생지표 / C=정성 리뷰 / D=분석 가설
 
 EVENTS = [
+    # ---------------- 2026-01: 원본 월간보고서 없음, 내부 실측 로그만 존재 ----------------
+    {
+        # 2026-09-15 사용자 추가 제공 파일(내부_골든위크_1월_시그니처H통합건강보험_260107-260123.xlsx)로 신규 등록.
+        # 1월치 원본 월간보고서 자체가 존재하지 않아(제공된 pptx는 2·3·4·5·7월뿐) 기획 의도·참여 조건 등
+        # 서술형 내용은 확인할 수 없음. 내부 실측 로그로 실행 사실과 응모 실적만 확인됨(evidence A).
+        "event_id": "2026-01_GOLDENWEEK",
+        "source_file": "내부_골든위크_1월_시그니처H통합건강보험_260107-260123.xlsx",
+        "report_month": "2026-01", "event_month": "2026-01", "data_status": "확인 필요",
+        "event_name": "골든위크(시그니처H 통합건강보험)", "event_category": "골든위크",
+        "target_primary": "FP/Agt.", "target_secondary": "고객",
+        "business_objective": "확인 필요(원본 월간보고서 없음, 내부 로그로 실행 사실만 확인)",
+        "target_behavior": "이벤트 참여", "participation_condition": "확인 필요",
+        "mechanic_type": "확인 필요", "channel": "고객터치 시스템 웹페이지",
+        "seasonal_theme": "골든위크(시그니처H 통합건강보험 테마)", "key_message": None, "cta": None,
+        "start_date": "2026-01-07", "end_date": "2026-01-23",
+        "data_quality_status": (
+            "확인 필요: 1월치 원본 월간보고서가 존재하지 않아(제공된 5개 pptx는 2·3·4·5·7월뿐) 기획 의도·참여 "
+            "조건 등 서술형 내용은 확인 불가. 실행 사실과 응모 실적은 내부 실측 로그로 확인됨(evidence A, 하단 "
+            "measured 참고)."
+        ),
+        "review_required": True,
+        "source_page": "내부_골든위크_1월_시그니처H통합건강보험_260107-260123.xlsx (일별 로그 합계, 2026-01-07~01-23, 17일)",
+        "reviews": [], "benefits": [],
+        "measured": {
+            "source_file": "내부_골든위크_1월_시그니처H통합건강보험_260107-260123.xlsx",
+            "source_page": "일별 로그 합계(2026-01-07~2026-01-23, 17일)",
+            "unique_visitor_count": 29730,
+            "participant_count": 9063,
+            "customer_response_count": 33016,
+            "note": (
+                "PV수(클릭수) 29,730건을 이벤트 페이지 방문수로, 총_응모고객수 9,063명을 참여자 수로 사용. "
+                "참고: xlsx 전사 2026-01 고객응모 집계는 10,871명으로 이 값보다 다소 크며, 1월 중 다른 이벤트 "
+                "응모분이 섞여 있거나 응모 기간이 로그 수집 기간(1/7~1/23) 밖으로 일부 벗어났을 가능성이 있어 "
+                "완전히 일치하지 않음(확인 필요)."
+            ),
+        },
+    },
+
     # ---------------- 2026-02 보고서 (report_month=2026-02) ----------------
     {
         "event_id": "2026-02_TOUCHAWARDS",
@@ -61,9 +99,12 @@ EVENTS = [
         "participation_condition": "확인 필요",
         "mechanic_type": "추첨", "channel": "고객터치 시스템 웹페이지",
         "seasonal_theme": "골든위크(시즌 테마, 매월 반복 프로그램명)",
-        "key_message": None, "cta": None, "start_date": None, "end_date": None,
-        "data_quality_status": "확인 필요", "review_required": True, "source_page": "slide 6",
-        "reviews": [
+        "key_message": None, "cta": None, "start_date": "2026-02-02", "end_date": "2026-02-20",
+        "data_quality_status": (
+            "확인 필요(제안 단계 정성 리뷰만 존재). 단 2026-09-15 추가: 실제 응모 실적은 내부 실측 로그로 "
+            "확인됨(evidence A, 하단 measured 참고)."
+        ),
+        "review_required": True, "source_page": "slide 6", "reviews": [
             {"quote": "매번 다양한 경품을 제공하는 것도 의미가 있지만, 실제 이벤트 참여율을 증대하는 모바일 금액권 중심으로 전개 제안 ex. 아메리카노 쿠폰(X) -> 스타벅스 상품권(O)", "kind": "improve"},
             {"quote": "참여율 증대 측면에서 컨셉 카피에 치중하기보다는 조금 더 직관적이고 후킹성 있는 컨셉 도출 필요", "kind": "improve"},
         ],
@@ -74,6 +115,20 @@ EVENTS = [
              "premium_level": "낮음(실속형 제안)", "practicality_level": "높음", "seasonality_level": "중간",
              "data_quality_status": "확인 필요(리뷰 단계의 제안안, 확정 지급 내역 아님)", "source_page": "slide 6"},
         ],
+        # 2026-09-15 사용자 추가 제공 파일(내부_골든위크_2월_설날맞이_260202-260220.xlsx)로 채움.
+        "measured": {
+            "source_file": "내부_골든위크_2월_설날맞이_260202-260220.xlsx",
+            "source_page": "일별 로그 합계(2026-02-02~2026-02-20, 19일)",
+            "unique_visitor_count": 21239,
+            "participant_count": 8403,
+            "customer_response_count": 24940,
+            "note": (
+                "PV수(클릭수) 21,239건을 이벤트 페이지 방문수로, 총_응모고객수 8,403명을 참여자 수로 사용. "
+                "참고: xlsx 전사 2026-02 고객응모 집계는 8,981명으로, 같은 달 11시콘서트 응모(1,645명, 응모기간이 "
+                "1월 말~2월 초에 걸침)를 더하면 총합이 전사 집계를 초과함 - 응모 기간이 월 경계를 넘나들어 "
+                "정확한 월별 합산과는 차이가 있으므로 참고용으로만 사용(확인 필요)."
+            ),
+        },
     },
     {
         "event_id": "2026-02_11CONCERT",
@@ -86,13 +141,27 @@ EVENTS = [
         "participation_condition": "사연 응모 (RSVP 운영)",
         "mechanic_type": "사연 응모, 추첨", "channel": "고객터치 시스템 웹페이지",
         "seasonal_theme": None, "key_message": None, "cta": None,
-        "start_date": None, "end_date": None,
-        "data_quality_status": "확인 필요", "review_required": True, "source_page": "slide 7-9",
+        "start_date": "2026-01-21", "end_date": "2026-02-03",
+        "data_quality_status": (
+            "확인 필요(정성 리뷰만 존재). 단 2026-09-15 추가: 실제 응모 실적은 내부 실측 로그로 확인됨"
+            "(evidence A, 하단 measured 참고)."
+        ),
+        "review_required": True, "source_page": "slide 7-9",
         "reviews": [
             {"quote": "당첨자 대상 1인당 경품비를 1천원선으로 줄이고 당첨 인원을 늘려 FP/Agt 입장에서 당첨 확률을 높이는 방안 제안 *기존 진행 여부 또는 금월 데이터 확인 필요", "kind": "improve"},
             {"quote": "당첨자 선정 기준을 단계별 우선순위 필터 방식으로 정리: ①전월 당첨자·정보누락 제외 ②3개월 이상 미당첨 우선 ③동일 최상위 송신자 최대 2인 ④소속별 비율 조정 ⑤사연 검토", "kind": "process"},
         ],
         "benefits": [],
+        # 2026-09-15 사용자 추가 제공 파일(내부_11시콘서트_2월_오페레타특집_260121-260203.xlsx)로 채움.
+        # 폴더명이 "2월공연_1월응모"라 응모 기간은 1월 말부터지만, 공연(=event_month)은 2월로 기존 이벤트에 매칭.
+        "measured": {
+            "source_file": "내부_11시콘서트_2월_오페레타특집_260121-260203.xlsx",
+            "source_page": "일별 로그 합계(2026-01-21~2026-02-03, 14일, 2월 공연분 응모 기간)",
+            "unique_visitor_count": 13254,
+            "participant_count": 1645,
+            "customer_response_count": 14126,
+            "note": "PV수(클릭수) 13,254건을 이벤트 페이지 방문수로, 총_응모고객수 1,645명을 참여자 수로 사용. 응모 기간이 1월 말~2월 초에 걸쳐 있어 월별 KPI 집계와 정확히 대응하지 않음(위 골든위크 2월 항목 참고).",
+        },
     },
     {
         "event_id": "2026-02_DESIGNSUPPORT",
@@ -131,16 +200,62 @@ EVENTS = [
     {
         "event_id": "2026-03_GOLDENWEEK",
         "source_file": "(wylie)한화생명 3월 월간보고_260402(F).pptx",
-        "report_month": "2026-03", "event_month": "2026-03", "data_status": "확인 필요",
+        "report_month": "2026-03", "event_month": "2026-03", "data_status": "result",
         "event_name": "골든위크", "event_category": "골든위크",
         "target_primary": "FP/Agt.", "target_secondary": "고객",
         "business_objective": "확인 필요(SUMMARY 나열 외 상세 리뷰 없음)",
         "target_behavior": "이벤트 참여", "participation_condition": "확인 필요",
         "mechanic_type": "확인 필요", "channel": "고객터치 시스템 웹페이지",
         "seasonal_theme": "골든위크", "key_message": None, "cta": None,
-        "start_date": None, "end_date": None,
-        "data_quality_status": "확인 필요(SUMMARY 슬라이드 나열 외 원문 텍스트 없음)",
+        "start_date": "2026-03-03", "end_date": "2026-03-20",
+        "data_quality_status": (
+            "SUMMARY 슬라이드 나열 외 서술형 원문 텍스트 없음. 단 2026-09-15 추가: 실제 응모 실적은 내부 실측 "
+            "로그로 확인됨(evidence A, 하단 measured 참고, 6개월 중 최다 응모)."
+        ),
         "review_required": True, "source_page": "slide 3", "reviews": [], "benefits": [],
+        # 2026-09-15 사용자 추가 제공 파일(내부_골든위크_3월_행운의복불복_260303-260320.xlsx)로 채움.
+        "measured": {
+            "source_file": "내부_골든위크_3월_행운의복불복_260303-260320.xlsx",
+            "source_page": "일별 로그 합계(2026-03-03~2026-03-20, 18일)",
+            "unique_visitor_count": 57288,
+            "participant_count": 17701,
+            "customer_response_count": 65049,
+            "note": (
+                "PV수(클릭수) 57,288건을 이벤트 페이지 방문수로, 총_응모고객수 17,701명을 참여자 수로 사용. "
+                "xlsx 전사 2026-03 고객응모 집계(17,830명)와 거의 일치(오차 129명, 0.7%) - 3월은 골든위크가 "
+                "고객응모 KPI의 대부분을 차지한 것으로 추정됨."
+            ),
+        },
+    },
+    {
+        # 2026-09-15 사용자 추가 제공 파일(내부_11시콘서트_3월_국제콩쿠르스타특집_260219-260304.xlsx)로 신규 등록.
+        # 3월 보고서 원문에는 이 회차에 대한 언급이 없었으나(터치어워즈/골든위크/원시트만 등장), 내부 실측 로그로
+        # 실제 진행 사실이 새로 확인됨.
+        "event_id": "2026-03_11CONCERT",
+        "source_file": "내부_11시콘서트_3월_국제콩쿠르스타특집_260219-260304.xlsx",
+        "report_month": "2026-03", "event_month": "2026-03", "data_status": "확인 필요",
+        "event_name": "11시 콘서트(국제콩쿠르스타 특집)", "event_category": "11시 콘서트",
+        "target_primary": "FP/Agt.", "target_secondary": None,
+        "business_objective": "확인 필요(3월 보고서 원문에 이 회차 서술 없음, 내부 로그로 실행 사실만 확인)",
+        "target_behavior": "사연 응모", "participation_condition": "확인 필요",
+        "mechanic_type": "사연 응모, 추첨", "channel": "고객터치 시스템 웹페이지",
+        "seasonal_theme": None, "key_message": None, "cta": None,
+        "start_date": "2026-02-19", "end_date": "2026-03-04",
+        "data_quality_status": (
+            "확인 필요: 3월 월간보고서 원문에 이 회차(국제콩쿠르스타 특집)에 대한 언급이 없어 기획 의도·참여 "
+            "조건은 확인 불가. 실행 사실과 응모 실적은 내부 실측 로그로 확인됨(evidence A, 하단 measured 참고)."
+        ),
+        "review_required": True,
+        "source_page": "내부_11시콘서트_3월_국제콩쿠르스타특집_260219-260304.xlsx (일별 로그 합계, 2026-02-19~03-04, 14일)",
+        "reviews": [], "benefits": [],
+        "measured": {
+            "source_file": "내부_11시콘서트_3월_국제콩쿠르스타특집_260219-260304.xlsx",
+            "source_page": "일별 로그 합계(2026-02-19~2026-03-04, 14일)",
+            "unique_visitor_count": 7547,
+            "participant_count": 706,
+            "customer_response_count": 9219,
+            "note": "PV수(클릭수) 7,547건을 이벤트 페이지 방문수로, 총_응모고객수 706명을 참여자 수로 사용. 응모 기간이 2월 말~3월 초에 걸쳐 있어 월별 KPI 집계와는 직접 비교하지 않음(응모 기간 자체 기준 누적치, 위 골든위크 3월 항목의 근일치는 참고용).",
+        },
     },
     {
         "event_id": "2026-04_GWANGJU_CULTURE",
@@ -216,16 +331,32 @@ EVENTS = [
     {
         "event_id": "2026-04_GOLDENWEEK",
         "source_file": "(wylie)한화생명 4월 월간보고_260507(F).pptx",
-        "report_month": "2026-04", "event_month": "2026-04", "data_status": "확인 필요",
+        "report_month": "2026-04", "event_month": "2026-04", "data_status": "result",
         "event_name": "골든위크", "event_category": "골든위크",
         "target_primary": "FP/Agt.", "target_secondary": "고객",
         "business_objective": "확인 필요(사유는 위 터치어워즈 항목과 동일)",
         "target_behavior": "확인 필요", "participation_condition": "확인 필요",
         "mechanic_type": "확인 필요", "channel": "고객터치 시스템 웹페이지",
         "seasonal_theme": "골든위크", "key_message": None, "cta": None,
-        "start_date": None, "end_date": None,
-        "data_quality_status": "확인 필요(원문 텍스트로 이벤트명 미확인 - 사용자 제공 정보로 등록)",
+        "start_date": "2026-04-06", "end_date": "2026-04-24",
+        "data_quality_status": (
+            "원문 텍스트로 이벤트명 미확인 - 사용자 제공 정보로 등록. 단 2026-09-15 추가: 실제 응모 실적은 "
+            "내부 실측 로그로 확인됨(evidence A, 하단 measured 참고)."
+        ),
         "review_required": True, "source_page": "slide 2 (SUMMARY)", "reviews": [], "benefits": [],
+        # 2026-09-15 사용자 추가 제공 파일(내부_골든위크_4월_치매담은_260406-260424.xlsx)로 채움.
+        "measured": {
+            "source_file": "내부_골든위크_4월_치매담은_260406-260424.xlsx",
+            "source_page": "일별 로그 합계(2026-04-06~2026-04-24, 19일)",
+            "unique_visitor_count": 53976,
+            "participant_count": 9601,
+            "customer_response_count": 56267,
+            "note": (
+                "PV수(클릭수) 53,976건을 이벤트 페이지 방문수로, 총_응모고객수 9,601명을 참여자 수로 사용. "
+                "xlsx 전사 2026-04 고객응모 집계(11,088명)와는 1,487명 차이가 있음 - 4월 11시콘서트 응모분은 "
+                "내부 로그가 없어 확인 불가하며, 그 차이가 여기서 온 것일 가능성이 있으나 단정하지 않음(확인 필요)."
+            ),
+        },
     },
     {
         "event_id": "2026-04_11CONCERT",
@@ -298,16 +429,41 @@ EVENTS = [
     {
         "event_id": "2026-05_GOLDENWEEK",
         "source_file": "(wylie)한화생명 5월 월간보고_260608(FF).pptx",
-        "report_month": "2026-05", "event_month": "2026-05", "data_status": "확인 필요",
+        "report_month": "2026-05", "event_month": "2026-05", "data_status": "result",
         "event_name": "골든위크", "event_category": "골든위크",
         "target_primary": "FP/Agt.", "target_secondary": "고객",
         "business_objective": "확인 필요(사유는 위와 동일)",
         "target_behavior": "확인 필요", "participation_condition": "확인 필요",
         "mechanic_type": "확인 필요", "channel": "고객터치 시스템 웹페이지",
         "seasonal_theme": "골든위크", "key_message": None, "cta": None,
-        "start_date": None, "end_date": None,
-        "data_quality_status": "확인 필요(원문 텍스트로 이벤트명 미확인)", "review_required": True,
+        "start_date": "2026-05-04", "end_date": "2026-05-22",
+        "data_quality_status": (
+            "원문 텍스트로 이벤트명 미확인. 단 2026-09-15 추가: 실제 응모 실적은 내부 실측 로그로 확인됨"
+            "(evidence A, 하단 measured/kakao_channel_summary 참고)."
+        ),
+        "review_required": True,
         "source_page": "slide 2 (SUMMARY)", "reviews": [], "benefits": [],
+        # 2026-09-15 사용자 추가 제공 파일(내부_골든위크_5월_1+1_260504-260522.xlsx, 카카오 1~2차)로 채움.
+        "measured": {
+            "source_file": "내부_골든위크_5월_1+1_260504-260522.xlsx",
+            "source_page": "일별 로그 합계(2026-05-04~2026-05-22, 19일)",
+            "unique_visitor_count": 37853,
+            "participant_count": 10935,
+            "customer_response_count": 41910,
+            "note": (
+                "PV수(클릭수) 37,853건을 이벤트 페이지 방문수로, 총_응모고객수 10,935명을 참여자 수로 사용. "
+                "같은 달 11시콘서트 응모(984명)를 더하면 11,919명으로 xlsx 전사 2026-05 고객응모 집계(12,105명)와 "
+                "거의 일치(오차 186명, 1.5%) - 두 이벤트가 5월 고객응모 KPI의 대부분을 차지한 것으로 추정됨."
+            ),
+        },
+        "kakao_channel_summary": {
+            "source_file": "카카오_5월 골든위크__1차/2차(GA/라이프랩/한금서) xls 6개, 260508/260518",
+            "rounds": 2,
+            "channels": "GA / 한금서 / 라이프랩",
+            "impression_total": 218659,
+            "click_total": 7574,
+            "note": "카카오톡 채널 발송분 한정 누적 노출/클릭 합계(2026-05-08, 05-18 2회차). 순 방문자 수 아님, 전사 집계와 직접 비교 금지.",
+        },
     },
     {
         "event_id": "2026-05_ONESHEET",
@@ -329,34 +485,53 @@ EVENTS = [
     {
         "event_id": "2026-05_11CONCERT",
         "source_file": "(wylie)한화생명 5월 월간보고_260608(FF).pptx",
-        "report_month": "2026-05", "event_month": "2026-05", "data_status": "확인 필요",
+        "report_month": "2026-05", "event_month": "2026-05", "data_status": "result",
         "event_name": "11시 콘서트", "event_category": "11시 콘서트",
         "target_primary": "FP/Agt.", "target_secondary": None,
         "business_objective": "확인 필요(사용자 제공 정보로 등록)",
         "target_behavior": "확인 필요", "participation_condition": "확인 필요",
         "mechanic_type": "확인 필요", "channel": "고객터치 시스템 웹페이지",
         "seasonal_theme": None, "key_message": None, "cta": None,
-        "start_date": None, "end_date": None,
-        "data_quality_status": "확인 필요(원문 텍스트로 이벤트명 미확인)", "review_required": True,
+        "start_date": "2026-04-15", "end_date": "2026-05-03",
+        "data_quality_status": (
+            "원문 텍스트로 이벤트명 미확인. 단 2026-09-15 추가: 실제 응모 실적은 내부 실측 로그로 확인됨"
+            "(evidence A, 하단 measured 참고)."
+        ),
+        "review_required": True,
         "source_page": "slide 2 (SUMMARY)", "reviews": [], "benefits": [],
+        # 2026-09-15 사용자 추가 제공 파일(11시콘서트_내부_5월_영화OST특집_260415-260503.xlsx)로 채움.
+        # 폴더명이 "5월공연_4월응모"라 응모 기간은 4월 중순부터지만, 공연(=event_month)은 5월로 기존 이벤트에 매칭.
+        "measured": {
+            "source_file": "11시콘서트_내부_5월_영화OST특집_260415-260503.xlsx",
+            "source_page": "일별 로그 합계(2026-04-15~2026-05-03, 19일, 5월 공연분 응모 기간)",
+            "unique_visitor_count": 13674,
+            "participant_count": 984,
+            "customer_response_count": 14003,
+            "note": "PV수(클릭수) 13,674건을 이벤트 페이지 방문수로, 총_응모고객수 984명을 참여자 수로 사용. 위 골든위크 5월 항목과 합산 시 xlsx 전사 2026-05 고객응모 집계와 거의 일치함(교차검증, 골든위크 5월 항목 참고).",
+        },
     },
     {
         "event_id": "2026-06_SALESBOOST_PLAN",
         "source_file": "(wylie)한화생명 5월 월간보고_260608(FF).pptx",
         "report_month": "2026-05",
         "event_month": "2026-06",  # 5월 보고서 내 '6월 영업부스트 패키지' 제작 리뷰 -> 6월 진행 예정건
-        "data_status": "plan",
+        "data_status": "mixed",  # 2026-09-15: 카카오 발송 로그로 실제 6월 집행 사실이 확인되어 plan->mixed로 정정
         "event_name": "영업부스트 패키지", "event_category": "영업부스트 패키지",
         "target_primary": "FP/Agt.", "target_secondary": "고객",
         "business_objective": "확인 필요(제작 리뷰 단계, 사업 목표 명시 없음)",
         "target_behavior": "확인 필요",
         "participation_condition": "확인 필요",
         "mechanic_type": "단계별 참여(X 설계사 page / Y 고객 page 구조)",
-        "channel": "고객터치 시스템 웹페이지",
+        "channel": "고객터치 시스템 웹페이지, 카카오톡 채널(한금서)",
         "seasonal_theme": "시크릿 박스 콘셉트",
         "key_message": "시크릿 박스 - 비밀스러운 기대감",
-        "cta": None, "start_date": None, "end_date": None,
-        "data_quality_status": "확인 필요(제작/디자인 리뷰 슬라이드만 존재, 실제 6월 시행 여부·성과는 6월 보고서 파일 오류로 삭제되어 확인 불가)",
+        "cta": None, "start_date": "2026-06-08", "end_date": "2026-06-29",
+        "data_quality_status": (
+            "제작/디자인 리뷰 슬라이드만 존재, 6월 보고서 파일 오류로 실제 성과 서술은 확인 불가. 단 2026-09-15 "
+            "추가: 카카오 채널 발송 로그(6/8~6/29, 1~4차)로 계획이 아니라 실제로 집행되었음이 확인됨(evidence A, "
+            "하단 kakao_channel_summary 참고) - data_status를 'plan'에서 'mixed'로 정정. 단 참여자/응모 인원 데이터는 "
+            "카카오 채널 로그에는 없어 확인 불가."
+        ),
         "review_required": True, "source_page": "slide 3-7",
         "reviews": [
             {"quote": "AI활용 KV 고도화: 동화적인 KV 구현을 위해 AI 활용 범위를 확대, 이미지 소스만으로 표현하기 어려운 무드를 시각화 진행. 제작 과정에서 AI 특유의 어색함으로 인해 여러 번 정제", "kind": "process"},
@@ -371,6 +546,130 @@ EVENTS = [
              "data_quality_status": "확인 필요(비주얼 모티브로만 언급, 실제 지급 경품 확정 여부 불명)",
              "source_page": "slide 5"},
         ],
+        # 2026-09-15 사용자 추가 제공 파일(카카오_영업부스트패키지_1~4차_한금서 xls 4개)로 채움.
+        "kakao_channel_summary": {
+            "source_file": "카카오_영업부스트패키지_1~4차_한금서 xls 4개, 260608/260615/260622/260629",
+            "rounds": 4,
+            "channels": "한금서(제공된 로그가 한금서 채널뿐 - GA/라이프랩 로그는 없음)",
+            "impression_total": 96955,
+            "click_total": 2461,
+            "note": "카카오톡 채널(한금서) 발송분 한정 누적 노출/클릭 합계(2026-06-08~06-29, 4회차). 순 방문자 수 아님, 전사 집계와 직접 비교 금지.",
+        },
+    },
+    {
+        # 2026-09-15 사용자 추가 제공 파일로 신규 등록. 6월 월간보고서 자체가 파일 오류로 유실되어(7월
+        # 보고서 표지에 명시) 6월치 이벤트는 원래 전혀 알 수 없었으나, 내부 실측 로그 + 카카오 채널 로그로
+        # 실행 사실과 실적이 새로 확인됨.
+        "event_id": "2026-06_11CONCERT",
+        "source_file": "내부_11시콘서트_6월_피겨발레_260518-260603.xlsx",
+        "report_month": "2026-06", "event_month": "2026-06", "data_status": "확인 필요",
+        "event_name": "11시 콘서트(피겨&발레)", "event_category": "11시 콘서트",
+        "target_primary": "FP/Agt.", "target_secondary": None,
+        "business_objective": "확인 필요(6월 월간보고서 자체가 파일 오류로 유실되어 서술형 내용 없음)",
+        "target_behavior": "사연 응모", "participation_condition": "확인 필요",
+        "mechanic_type": "사연 응모, 추첨", "channel": "고객터치 시스템 웹페이지, 카카오톡 채널(GA/라이프랩/한금서)",
+        "seasonal_theme": None, "key_message": None, "cta": None,
+        "start_date": "2026-05-18", "end_date": "2026-06-03",
+        "data_quality_status": (
+            "확인 필요: 6월 월간보고서 자체가 파일 오류로 삭제되어(7월 보고서 표지 명시) 서술형 내용은 없음. "
+            "실행 사실과 응모 실적은 내부 실측 로그 + 카카오 채널 발송 로그로 확인됨(evidence A, 하단 measured/"
+            "kakao_channel_summary 참고)."
+        ),
+        "review_required": True,
+        "source_page": "내부_11시콘서트_6월_피겨발레_260518-260603.xlsx (일별 로그 합계, 2026-05-18~06-03, 16일)",
+        "reviews": [], "benefits": [],
+        "measured": {
+            "source_file": "내부_11시콘서트_6월_피겨발레_260518-260603.xlsx",
+            "source_page": "일별 로그 합계(2026-05-18~2026-06-03, 16일)",
+            "unique_visitor_count": 16570,
+            "participant_count": 1177,
+            "customer_response_count": 17376,
+            "note": (
+                "PV수(클릭수) 16,570건을 이벤트 페이지 방문수로, 총_응모고객수 1,177명을 참여자 수로 사용. "
+                "응모 기간이 5월 말~6월 초에 걸쳐 있어, 6월 xlsx 전사 집계(응모 1,098명 - 6월 보고서 자체가 "
+                "유실되어 신뢰도가 낮은 값)와는 직접 비교하지 않음."
+            ),
+        },
+        "kakao_channel_summary": {
+            "source_file": "카카오_11시콘서트_카탈로그형(GA/라이프랩/한금서) xls 3개, 260520",
+            "rounds": 1,
+            "channels": "GA / 한금서 / 라이프랩",
+            "impression_total": 5531,
+            "click_total": 181,
+            "note": "카카오톡 채널 발송분 한정 노출/클릭 합계(2026-05-20 1회차). 순 방문자 수 아님, 전사 집계와 직접 비교 금지.",
+        },
+    },
+    {
+        # 2026-09-15 사용자 추가 제공 파일로 신규 등록. 대시보드에 전혀 없던 카테고리(뉴스레터)로,
+        # 응모 유도가 없는 정보성 콘텐츠 발송 채널이라(내부 로그의 총_응모고객수도 0으로 확인됨) 고객응모
+        # KPI에는 기여하지 않지만, 터치발송 KPI 중 뉴스레터 기여분을 분해해 보는 데 참고할 수 있어 등록.
+        "event_id": "2026-05_NEWSLETTER",
+        "source_file": "카카오_뉴스레터_1~2차(GA/라이프랩/한금서) xls 6개",
+        "report_month": "2026-05", "event_month": "2026-05", "data_status": "확인 필요",
+        "event_name": "뉴스레터", "event_category": "뉴스레터",
+        "target_primary": "고객", "target_secondary": "FP/Agt.",
+        "business_objective": "확인 필요(원본 월간보고서에 뉴스레터 단독 서술 없음, 카카오 채널 로그로 신규 확인)",
+        "target_behavior": "고객 터치 발송(콘텐츠 열람)", "participation_condition": "해당 없음(응모형 이벤트 아님)",
+        "mechanic_type": "정보성 콘텐츠 발송(응모·추첨 없음)", "channel": "카카오톡 채널(GA/라이프랩/한금서)",
+        "seasonal_theme": None, "key_message": None, "cta": None,
+        "start_date": "2026-05-11", "end_date": "2026-05-22",
+        "data_quality_status": (
+            "확인 필요: 원본 월간보고서에 뉴스레터가 단독 이벤트로 서술되어 있지 않음(응모 유도가 없는 정보성 "
+            "콘텐츠 채널로 보임). 카카오 채널 발송 로그로 실행 사실과 노출/클릭 실적만 확인됨(evidence A, 하단 "
+            "kakao_channel_summary 참고). 응모고객 수는 발생하지 않는 채널이라 고객응모 KPI에는 기여하지 않고, "
+            "터치발송 KPI 분해 참고용으로만 사용."
+        ),
+        "review_required": True, "source_page": "카카오_뉴스레터_1~2차 xls 6개",
+        "reviews": [], "benefits": [],
+        "kakao_channel_summary": {
+            "source_file": "카카오_뉴스레터_1차/2차(GA/라이프랩/한금서) xls 6개, 260511/260522",
+            "rounds": 2,
+            "channels": "GA / 한금서 / 라이프랩",
+            "impression_total": 219665,
+            "click_total": 7263,
+            "note": "카카오톡 채널 발송분 한정 누적 노출/클릭 합계(2026-05-11, 05-22 2회차). 순 방문자 수 아님, 전사 집계와 직접 비교 금지.",
+        },
+    },
+    {
+        # 2026-09-15 사용자 추가 제공 파일로 신규 등록. 6월 월간보고서 자체가 파일 오류로 유실됨.
+        "event_id": "2026-06_NEWSLETTER",
+        "source_file": "내부_뉴스레터_6월_260615-260630.xlsx + 카카오_뉴스레터_1~2차(GA/라이프랩/한금서) xls 6개",
+        "report_month": "2026-06", "event_month": "2026-06", "data_status": "확인 필요",
+        "event_name": "뉴스레터", "event_category": "뉴스레터",
+        "target_primary": "고객", "target_secondary": "FP/Agt.",
+        "business_objective": "확인 필요(6월 월간보고서 자체가 파일 오류로 유실됨)",
+        "target_behavior": "고객 터치 발송(콘텐츠 열람)", "participation_condition": "해당 없음(응모형 이벤트 아님)",
+        "mechanic_type": "정보성 콘텐츠 발송(응모·추첨 없음)", "channel": "고객터치 시스템, 카카오톡 채널(GA/라이프랩/한금서)",
+        "seasonal_theme": None, "key_message": None, "cta": None,
+        "start_date": "2026-06-15", "end_date": "2026-06-30",
+        "data_quality_status": (
+            "확인 필요: 6월 월간보고서 자체가 파일 오류로 삭제되어 서술형 내용 없음. 내부 실측 로그 + 카카오 "
+            "채널 발송 로그로 실행 사실과 발송/노출/클릭 실적만 확인됨(evidence A). 응모고객 수는 발생하지 않는 "
+            "채널(내부 로그 총_응모고객수도 0으로 확인됨)이라 고객응모 KPI에는 기여하지 않고, 터치발송 KPI 분해 "
+            "참고용으로만 사용."
+        ),
+        "review_required": True,
+        "source_page": "내부_뉴스레터_6월_260615-260630.xlsx / 카카오_뉴스레터_1~2차 xls 6개",
+        "reviews": [], "benefits": [],
+        "measured": {
+            "source_file": "내부_뉴스레터_6월_260615-260630.xlsx",
+            "source_page": "일별 로그 합계(2026-06-15~2026-06-30, 16일)",
+            "unique_visitor_count": 32650,
+            "customer_response_count": 34211,
+            "note": (
+                "PV수(클릭수) 32,650건을 콘텐츠 열람(클릭) 수로, 수신고객수 34,211명을 발송 대상 규모로 사용. "
+                "총_응모고객수 항목은 원본에 0으로 기재되어 있어(뉴스레터는 응모 유도가 없는 채널) 참여자 수는 "
+                "집계하지 않음(N/A)."
+            ),
+        },
+        "kakao_channel_summary": {
+            "source_file": "카카오_뉴스레터_1차/2차(GA/라이프랩/한금서) xls 6개, 260618/260625",
+            "rounds": 2,
+            "channels": "GA / 한금서 / 라이프랩",
+            "impression_total": 132420,
+            "click_total": 1457,
+            "note": "카카오톡 채널 발송분 한정 누적 노출/클릭 합계(2026-06-18, 06-25 2회차). 순 방문자 수 아님, 전사 집계와 직접 비교 금지.",
+        },
     },
 
     # ---------------- 2026-07 보고서: 7월 실적(정성) + 8월 계획(정량) ----------------
@@ -436,15 +735,34 @@ EVENTS = [
         "seasonal_theme": None, "key_message": None, "cta": None,
         "start_date": None, "end_date": None,
         "data_quality_status": (
-            "정성 리뷰만 존재(정량 수치 없음 - '최다 참여 모객'의 실제 인원수는 원문에 기재되어 있지 않음). "
-            "확인 필요: 이 리뷰가 가리키는 응모 회차가 event_id=2026-08_11CONCERT_PLAN(8월 공연 '신사들의오페라'/7월 "
-            "응모, 실제 응모자 1,160명 확인됨)과 동일 회차인지 원문에 명시되어 있지 않아 단정하지 않음(시기상 유력)."
+            "원문 자체는 정성 리뷰만 존재(정량 수치 없음 - '최다 참여 모객'의 실제 인원수는 원문에 기재되어 있지 "
+            "않음). 확인 필요: 이 리뷰가 가리키는 응모 회차가 event_id=2026-08_11CONCERT_PLAN(8월 공연 '신사들의오페라'/7월 "
+            "응모, 실제 응모자 1,160명 확인됨)과 동일 회차인지 원문에 명시되어 있지 않아 단정하지 않음(시기상 유력). "
+            "단 2026-09-15 추가: 이 리뷰가 아닌 다른 회차(7월 공연 '푸른여름날', 6월 응모)의 실제 응모 실적은 내부 "
+            "실측 로그로 별도 확인됨(evidence A, 하단 measured 참고) - 위 정성 리뷰와 동일 회차인지는 여전히 확인 필요."
         ),
         "review_required": True, "source_page": "slide 9 (9월 운영 제언)",
         "reviews": [
             {"quote": "11시 콘서트의 응모 조건 강화에도 불구하고, 프로모션 페이지 내에 난이도를 낮춘 사연 작성 예시를 선제적으로 노출함으로써 이전 차수 대비 최다 참여 모객 달성", "kind": "result_qualitative"},
         ],
         "benefits": [],
+        # 2026-09-15 사용자 추가 제공 파일(내부_11시콘서트_7월_푸른여름날_260615-260630.xlsx, 카카오 2회차)로 채움.
+        "measured": {
+            "source_file": "내부_11시콘서트_7월_푸른여름날_260615-260630.xlsx",
+            "source_page": "일별 로그 합계(2026-06-15~2026-06-30, 16일, 7월 공연분 응모 기간)",
+            "unique_visitor_count": 17363,
+            "participant_count": 853,
+            "customer_response_count": 18924,
+            "note": "PV수(클릭수) 17,363건을 이벤트 페이지 방문수로, 총_응모고객수 853명을 참여자 수로 사용. 응모 기간이 6월 중이라 7월 xlsx 전사 집계와는 직접 비교하지 않음(응모 기간 자체 기준 누적치).",
+        },
+        "kakao_channel_summary": {
+            "source_file": "카카오_11시콘서트_카탈로그형/와이드이미지형(GA/라이프랩/한금서) xls 6개, 260617/260626",
+            "rounds": 2,
+            "channels": "GA / 한금서 / 라이프랩",
+            "impression_total": 38793,
+            "click_total": 400,
+            "note": "카카오톡 채널 발송분 한정 누적 노출/클릭 합계(2026-06-17, 06-26 2회차). 순 방문자 수 아님, 전사 집계와 직접 비교 금지.",
+        },
     },
     {
         # 2026-09-04 사용자 추가 제공 파일(카카오_불꽃어워즈_1~4차)로 신규 등록.
