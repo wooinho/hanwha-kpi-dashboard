@@ -230,4 +230,31 @@ describe("buildMonthlyCampaignInsight - workingAnalyses (데이터 나열이 아
     expect(result.recommendations[0]).toContain("'터치어워즈'");
     expect(result.recommendations[0]).toMatch(/참여가 늘고/);
   });
+
+  it("요약 문장이 '몇 건'뿐 아니라 그 몇 건이 어떤 이벤트인지 이름을 괄호로 병기한다", () => {
+    const data: Dataset = {
+      events: [
+        makeEvent({ event_id: "GW-06", event_month: "2026-06", event_name: "골든위크" }),
+        makeEvent({ event_id: "GW-07", event_month: "2026-07", event_name: "골든위크" }),
+        makeEvent({ event_id: "TA-06", event_month: "2026-06", event_category: "터치어워즈", event_name: "터치어워즈" }),
+        makeEvent({ event_id: "TA-07", event_month: "2026-07", event_category: "터치어워즈", event_name: "터치어워즈" }),
+        makeEvent({ event_id: "SD-07", event_month: "2026-07", event_category: "설계지원팀장", event_name: "설계지원팀장" }),
+      ],
+      benefits: [],
+      performance: [
+        makePerf({ event_id: "GW-06", evidence_type: "A", participant_count: 1000 }),
+        makePerf({ event_id: "GW-07", evidence_type: "A", participant_count: 1500 }), // worked
+        makePerf({ event_id: "TA-06", evidence_type: "A", participant_count: 1000 }),
+        makePerf({ event_id: "TA-07", evidence_type: "A", participant_count: 400 }), // underperformed
+        makePerf({ event_id: "SD-07", evidence_type: "D" }), // insufficient_evidence
+      ],
+      insights: [],
+      monthlyKpi: [],
+      kpiTargets: TARGETS,
+    };
+    const result = buildMonthlyCampaignInsight(data, "2026-07");
+    expect(result.summary).toContain("1건(골든위크)은(는) 이전 회차 대비 참여가 늘어");
+    expect(result.summary).toContain("1건(터치어워즈)은(는) 참여가 줄어");
+    expect(result.summary).toContain("1건(설계지원팀장)은(는) 정량 근거가 부족해");
+  });
 });

@@ -247,23 +247,46 @@ export function buildMonthlyCampaignInsight(data: Dataset, month: string): Month
     }
   }
 
-  const evidencedCount = campaigns.filter((c) => c.evidence === "A" || c.evidence === "B").length;
   const totalParticipants = campaigns
     .filter((c) => isNum(c.participantCount))
     .reduce((sum, c) => sum + (c.participantCount as number), 0);
-  const workedCount = workingAnalyses.filter((a) => a.verdict === "worked").length;
-  const underperformedCount = workingAnalyses.filter((a) => a.verdict === "underperformed").length;
-  const insufficientCount = workingAnalyses.filter((a) => a.verdict === "insufficient_evidence").length;
-  const hasTrendJudgement = workedCount + underperformedCount > 0;
+
+  // 요약 문장에 "몇 건"뿐 아니라 그 몇 건이 "어떤 이벤트"인지 이름을 직접 지목한다 - 숫자만으로는
+  // 어떤 캠페인을 가리키는지 알 수 없다는 지적(2026-09-16)에 따라 각 판정 그룹의 이벤트명을 괄호로 병기.
+  const namesOf = (v: CampaignVerdict) => workingAnalyses.filter((a) => a.verdict === v).map((a) => a.eventName);
+  const buckets: { names: string[]; mid: string; end: string }[] = [
+    {
+      names: namesOf("worked"),
+      mid: "은(는) 이전 회차 대비 참여가 늘어 KPI에 긍정적으로 기여했을 가능성이 있고,",
+      end: "은(는) 이전 회차 대비 참여가 늘어 KPI에 긍정적으로 기여했을 가능성이 있습니다.",
+    },
+    {
+      names: namesOf("underperformed"),
+      mid: "은(는) 참여가 줄어 기여가 제한적이었을 가능성이 있으며,",
+      end: "은(는) 참여가 줄어 기여가 제한적이었을 가능성이 있습니다.",
+    },
+    {
+      names: [...namesOf("steady"), ...namesOf("baseline")],
+      mid: "은(는) 정량 근거는 있으나 뚜렷한 증감·비교 대상이 없어 추세 판단을 보류하며,",
+      end: "은(는) 정량 근거는 있으나 뚜렷한 증감·비교 대상이 없어 추세 판단을 보류합니다.",
+    },
+    {
+      names: namesOf("insufficient_evidence"),
+      mid: "은(는) 정량 근거가 부족해 판단할 수 없으며,",
+      end: "은(는) 정량 근거가 부족해 판단할 수 없습니다.",
+    },
+  ];
+  const presentBuckets = buckets.filter((b) => b.names.length > 0);
+  const trendSentence = presentBuckets
+    .map((b, i) => `${b.names.length}건(${b.names.join(", ")})${i === presentBuckets.length - 1 ? b.end : b.mid}`)
+    .join(" ");
 
   const summary =
     campaigns.length === 0
       ? `${month}에는 등록된 캠페인이 없습니다.`
-      : `${month}에는 ${campaigns.length}개 캠페인이 운영/기획되었습니다.` +
-        (hasTrendJudgement
-          ? ` 이 중 ${workedCount}건은 이전 회차 대비 참여가 늘어 KPI에 긍정적으로 기여했을 가능성이 있고, ${underperformedCount}건은 참여가 줄어 기여가 제한적이었을 가능성이 있으며, ${insufficientCount}건은 정량 근거가 부족해 판단할 수 없습니다`
-          : ` 이 중 ${evidencedCount}건에서 정량 근거가 확인되지만 비교 가능한 이전 회차가 없어 추세 판단은 보류합니다`) +
-        (totalParticipants > 0 ? ` (정량 근거 기준 총 참여자 ${totalParticipants.toLocaleString("ko-KR")}명).` : ".") +
+      : `${month}에는 ${campaigns.length}개 캠페인이 운영/기획되었습니다. ` +
+        trendSentence +
+        (totalParticipants > 0 ? ` (정량 근거 기준 총 참여자 ${totalParticipants.toLocaleString("ko-KR")}명)` : "") +
         (reportStatus === "보고서 누락" ? " 이 달은 운영 리뷰 보고서가 없어(파일 오류) 참고 시 유의가 필요합니다." : "");
 
   return { month, reportStatus, campaigns, kpiSnapshot, workingAnalyses, recommendations, summary };
