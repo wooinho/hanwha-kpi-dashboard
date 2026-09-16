@@ -125,7 +125,7 @@ export function MonthlyInsightBanner({ data }: { data: Dataset }) {
             <p className="text-xs text-gray-400">해당하는 캠페인이 없습니다.</p>
           ) : (
             <ul className="space-y-1.5 text-xs text-gray-700">
-              {workedOrSteady.slice(0, 3).map((a) => (
+              {workedOrSteady.map((a) => (
                 <li key={a.eventId}>
                   <span className="mr-1 font-medium">{a.eventName}</span>
                   <Badge tone={VERDICT_META[a.verdict].tone}>{VERDICT_META[a.verdict].label}</Badge>
@@ -141,7 +141,7 @@ export function MonthlyInsightBanner({ data }: { data: Dataset }) {
             <p className="text-xs text-gray-400">해당하는 캠페인이 없습니다.</p>
           ) : (
             <ul className="space-y-1.5 text-xs text-gray-700">
-              {underperformedOrUnclear.slice(0, 3).map((a) => (
+              {underperformedOrUnclear.map((a) => (
                 <li key={a.eventId}>
                   <span className="mr-1 font-medium">{a.eventName}</span>
                   <Badge tone={VERDICT_META[a.verdict].tone}>{VERDICT_META[a.verdict].label}</Badge>
