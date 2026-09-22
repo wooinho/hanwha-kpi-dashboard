@@ -2,7 +2,7 @@ import type { Dataset } from "./types";
 import { NO_DATA } from "./types";
 import { isNum, type Num } from "./calc";
 import { buildMatrixRows, type MatrixRow } from "./matrix";
-import { computeKpiAchievements } from "./kpiAchievement";
+import { computeKpiAchievements, type KpiAchievement } from "./kpiAchievement";
 import { eunNeun, mapBehaviorsToKpiLabels } from "./campaignInsights";
 
 export interface MonthKpiSnapshot {
@@ -53,7 +53,12 @@ export interface MonthlyCampaignInsight {
   month: string;
   reportStatus: "정상" | "보고서 누락" | "확인 필요";
   campaigns: MonthCampaignRow[];
+  /** 선택한 달 시점의 값 - 캠페인 코멘트에서 "같은 달 OO는 목표 대비 몇 %" 문장을 만드는 데만 사용. */
   kpiSnapshot: MonthKpiSnapshot[];
+  /** 연간(전사, 확보된 전체 개월 기준) 달성 현황 - 배너 상단 요약 카드는 이 값을 그대로 표시한다
+   *  (2026-09-23: "이 달 값"이 아니라 "연간 데이터"로 보여달라는 요청에 따라, 아래 ① 섹션과 동일한
+   *  연간 집계를 재사용 - 새 계산식을 만들지 않고 이미 검증된 computeKpiAchievements를 그대로 노출). */
+  achievements: KpiAchievement[];
   workingAnalyses: CampaignWorkingAnalysis[];
   recommendations: string[];
   summary: string;
@@ -289,5 +294,5 @@ export function buildMonthlyCampaignInsight(data: Dataset, month: string): Month
         (totalParticipants > 0 ? ` (정량 근거 기준 총 참여자 ${totalParticipants.toLocaleString("ko-KR")}명)` : "") +
         (reportStatus === "보고서 누락" ? " 이 달은 운영 리뷰 보고서가 없어(파일 오류) 참고 시 유의가 필요합니다." : "");
 
-  return { month, reportStatus, campaigns, kpiSnapshot, workingAnalyses, recommendations, summary };
+  return { month, reportStatus, campaigns, kpiSnapshot, achievements, workingAnalyses, recommendations, summary };
 }

@@ -108,6 +108,12 @@ describe("buildMonthlyCampaignInsight", () => {
     const ga = result.kpiSnapshot.find((k) => k.metric === "ga_login_count")!;
     expect(ga.value).toBe(6000);
     expect(ga.momChangePct).toBeCloseTo(20); // 5000 -> 6000
+
+    // achievements는 "선택한 달" 값이 아니라 확보된 전체 개월 기준 연간 데이터이며, 월을 바꿔도
+    // 동일해야 한다(2026-09-23: 상단 요약 카드를 "이 달 값"에서 "연간 데이터"로 바꿔달라는 요청).
+    const gaAnnual = result.achievements.find((a) => a.metric === "ga_login_count")!;
+    expect(gaAnnual.actualValue).toBeCloseTo((5000 + 6000) / 2);
+    expect(gaAnnual.monthsUsed).toBe(2);
   });
 
   it("보고서 누락 월은 reportStatus를 그대로 전달한다", () => {

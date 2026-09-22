@@ -6,19 +6,9 @@ import { Badge } from "@/components/ui/Badge";
 import type { Dataset } from "@/lib/types";
 import { listAvailableMonths, buildMonthlyCampaignInsight, type CampaignVerdict } from "@/lib/monthlyCampaignInsight";
 import { isNum } from "@/lib/calc";
+import { KpiAchievementCard } from "@/components/KpiAchievementCard";
 import Link from "next/link";
 import { CalendarSearch } from "lucide-react";
-
-function fmtVal(v: number | "N/A"): string {
-  return v === "N/A" ? "N/A" : v.toLocaleString("ko-KR");
-}
-
-function pctBadgeTone(pct: number | null): "success" | "warning" | "danger" | "neutral" {
-  if (pct === null) return "neutral";
-  if (pct >= 100) return "success";
-  if (pct >= 70) return "warning";
-  return "danger";
-}
 
 const VERDICT_META: Record<CampaignVerdict, { label: string; tone: "success" | "warning" | "danger" | "neutral" | "info" }> = {
   worked: { label: "기여 관찰됨", tone: "success" },
@@ -77,26 +67,11 @@ export function MonthlyInsightBanner({ data }: { data: Dataset }) {
 
       <p className="mt-3 text-sm font-medium text-gray-800">{insight.summary}</p>
 
-      <div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4">
-        {insight.kpiSnapshot.map((k) => (
-          <div key={k.metric} className="rounded-md border border-[var(--border)] bg-white/70 px-2 py-1.5">
-            <p className="text-[11px] text-gray-500">{k.label}</p>
-            <p className="text-sm font-bold text-gray-900">
-              {fmtVal(k.value)}
-              <span className="ml-0.5 text-[10px] font-normal text-gray-400">{k.unit}</span>
-            </p>
-            <div className="mt-0.5 flex items-center gap-1">
-              <Badge tone={pctBadgeTone(k.vsTargetPct)}>
-                {k.vsTargetPct === null ? "N/A" : `목표대비 ${k.vsTargetPct.toFixed(0)}%`}
-              </Badge>
-              {k.momChangePct !== null && (
-                <span className={`text-[10px] ${k.momChangePct >= 0 ? "text-emerald-600" : "text-red-500"}`}>
-                  전월대비 {k.momChangePct >= 0 ? "+" : ""}
-                  {k.momChangePct.toFixed(1)}%
-                </span>
-              )}
-            </div>
-          </div>
+      {/* 2026-09-23: "이 달 값"이 아니라 "연간 데이터"로 보여달라는 요청 - 아래 ① 섹션과 동일한
+          연간 달성 현황(computeKpiAchievements)을 그대로 재사용해 두 영역의 수치가 항상 일치하게 함. */}
+      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
+        {insight.achievements.map((a) => (
+          <KpiAchievementCard key={a.metric} item={a} />
         ))}
       </div>
 
